@@ -137,6 +137,7 @@ y3 <- 249.29 + 0.9499130 * (x_vector-280) + 0.001786957 * (x_vector - 280)^2
 y4 <- 258.67 + 0.9320435 * (x_vector-290)
 
 plot(x_vector,y1,type="p", col="red", lwd=2, pch=4, main="Interpolação Hermite (ax³ +bx²+cx+d = 0)", xlab="Força", ylab="Alcance - Dunk 1w (spin 9)")
+abline(lm(c(x_vector, x_vector, x_vector, x_vector) ~ c(y1, y2, y3, y4)))
 points(x_vector,y2, col="green", lwd=2, pch=4)
 points(x_vector,y3, lwd=2, pch=4)
 points(x_vector,y4, col="blue",lwd=2,  pch=4)
@@ -144,6 +145,44 @@ legend(x="topleft", legend=c("[x1, x2]", "[x2, x3]", "[x3, x4]", "[x4]"), lty=1,
 ```
 
 ![](PangYa_Interpolation_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+
+```r
+# Regressão linear para cada caso
+
+# Com relação ao intervalo [y1, y2]
+
+plot(x_vector, y1)
+abline(lm(y2 ~ x_vector))
+```
+
+![](PangYa_Interpolation_files/figure-html/unnamed-chunk-1-2.png)<!-- -->
+
+```r
+# Com relação ao intervalo [y2, y3]
+
+plot(x_vector, y2)
+abline(lm(y3 ~ x_vector))
+```
+
+![](PangYa_Interpolation_files/figure-html/unnamed-chunk-1-3.png)<!-- -->
+
+```r
+# Com relação ao intervalo [y3, y4]
+
+plot(x_vector, y3)
+abline(lm(y4 ~ x_vector))
+```
+
+![](PangYa_Interpolation_files/figure-html/unnamed-chunk-1-4.png)<!-- -->
+
+```r
+# Com relação ao intervalo [y1, y4]
+
+plot(x_vector, y4)
+abline(lm(y1 ~ x_vector))
+```
+
+![](PangYa_Interpolation_files/figure-html/unnamed-chunk-1-5.png)<!-- -->
 
 ```r
 # Cálculos dos intervalos:
