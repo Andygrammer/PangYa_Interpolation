@@ -1,0 +1,86 @@
+---
+title: "PangYa Interpolation"
+author: "por André Marinho"
+date: "31/07/2020"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Descrição do problema
+# Este projeto está em constante implementação e está sendo utilizado como backup. Por favor, aguarde liberação deste relatório na sua versão final para breve.
+PangYa é um jogo de golfe online produzido pela Ntreev Soft, em 2004.
+
+Em um jogo de golfe, o objetivo principal é acertar o buraco com o menor número possível de tacadas.
+
+Em PangYa, podemos realizar cálculos para ter maior acurácia nas tacadas.
+
+Desde que se começou a realizar os primeiros cálculos em PangYa, se identificou que uma das maiores dificuldades está em determinar, com exatidão, os valores relacionados às "influências" das tacadas. Para que possamos entrar no assunto, deixe-me mostrar a seguinte imagem para você entender melhor sobre o que estou falando.
+
+***********TODO: imagem PangYa buraco 1 BL tee show.
+Figura 1: uma captura in-game de PangYa
+
+Repare, na figura 1, que o PangYa possui os seguintes elementos de jogo:
+
+1. Barra de força:
+2. Spin:
+3. Altura:
+4. Vento:
+5. TODO...
+
+O problema, portanto, é: dados os elementos de jogo, como podemos calcular uma jogada em PangYa com maior acurácia possível?
+
+Podemos calcular a jogada de acordo com conceitos da Física ou mesmo da Matemática. Farei uma análise aqui utilizando a segunda disciplina mencionada.
+
+## 2. Análise de uma jogada
+TODO...
+
+
+```{r}
+x1 <- 250
+x4 <- 290
+x2 <- (x4 + x1) / 2
+x3 <- x1+(x2-x1)+(x4-x2)/2
+x <- c(x1, x2, x3, x4)
+x
+y <-c(219.24, 239.60, 249.29, 258.67)
+y
+interpolation_size <- 21 # 21 forças
+
+z <- spline(x, y, n=21)
+z
+
+power_dataframe <- do.call(rbind.data.frame, z)
+for (index in 1:length(power_dataframe)) {
+        colnames(power_dataframe)[index] <- paste("Power/Reach ", index)
+}
+
+power_dataframe
+
+splines::interpSpline(x,y)$coef
+
+print("ax³ + bx² + cx + d = 0")
+
+x_vector <- seq(from=250, to=290, by=2)
+y1 <- 219.24 + 1.0323478 * (x_vector-250)
+y2 <- 239.6 + 0.9893043 * (x_vector-270)
+y3 <- 249.29 + 0.9499130 * (x_vector-280) + 0.001786957 * (x_vector - 280)^2
+y4 <- 258.67 + 0.9320435 * (x_vector-290)
+
+plot(x_vector,y1,type="p", col="red", lwd=2, pch=4, main="Interpolação Hermite (ax³ +bx²+cx+d = 0)", xlab="Força", ylab="Alcance - Dunk 1w (spin 9)")
+points(x_vector,y2, col="green", lwd=2, pch=4)
+points(x_vector,y3, lwd=2, pch=4)
+points(x_vector,y4, col="blue",lwd=2,  pch=4)
+legend(x="topleft", legend=c("[x1, x2]", "[x2, x3]", "[x3, x4]", "[x4]"), lty=1, lwd=2, col=c("red", "green", "black", "blue"), pch=4)
+
+# Cálculos dos intervalos:
+
+# y1 <- 219.24 + 1.0323478 * (x_vector-250)
+# y2 <- 239.6 + 0.9893043 * (x_vector-270)
+# y3 <- 249.29 + 0.9499130 * (x_vector-280) + 0.001786957 * (x_vector - 280)^2
+# y4 <- 258.67 + 0.9320435 * (x_vector-290)
+```
